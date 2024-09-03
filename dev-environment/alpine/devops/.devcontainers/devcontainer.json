@@ -1,0 +1,25 @@
+{
+    "name": "DevOps Environment with Azure CLI on Alpine",
+    "build": {
+        "dockerfile": "../Dockerfile"
+    },
+    //# Use image instead of build when using a pre-built image.
+    //# Example:
+    //# "image": "devops-alpine:1.0.0",
+    "postCreateCommand": "terraform --version && go version && lazygit --version && az --version",
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "terminal.integrated.shell.linux": "/bin/bash"
+            },
+            "extensions": [
+                "ms-azuretools.vscode-azurefunctions",
+                "hashicorp.terraform",
+                "golang.go",
+                "fredwangwang.vscode-hcl-format",
+                "DavidAnson.vscode-markdownlint"
+            ]
+        }
+    }
+}
+  
