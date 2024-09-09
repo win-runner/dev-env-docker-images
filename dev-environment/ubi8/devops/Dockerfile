@@ -20,7 +20,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Version variables
 ENV TERRAFORM_VERSION=1.9.5
 ENV TFLINT_VERSION=v0.53.0
-ENV LAZYGIT_VERSION=0.43.1
+ENV LAZYGIT_VERSION=0.44.0
 
 # Install Terraform
 RUN curl -fsSL https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip -o terraform.zip \
