@@ -21,6 +21,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 ENV TERRAFORM_VERSION=1.9.6
 ENV TFLINT_VERSION=v0.53.0
 ENV LAZYGIT_VERSION=0.44.0
+ENV TERRAFORM_DOCS_VERSION=v0.19.0
 
 # Install Terraform
 RUN curl -fsSL https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip -o terraform.zip \
@@ -36,6 +37,12 @@ RUN curl -fsSL https://github.com/terraform-linters/tflint/releases/download/${T
 
 # Install Lazygit
 RUN GOBIN=/usr/local/bin go install github.com/jesseduffield/lazygit@v${LAZYGIT_VERSION}
+
+# Install terraform-docs
+RUN curl -fsSL https://github.com/terraform-docs/terraform-docs/releases/download/${TERRAFORM_DOCS_VERSION}/terraform-docs-${TERRAFORM_DOCS_VERSION}-linux-amd64.tar.gz -o terraform-docs.tar.gz \
+    && tar -xzf terraform-docs.tar.gz \
+    && mv terraform-docs /usr/local/bin/terraform-docs \
+    && rm terraform-docs.tar.gz
 
 # Create virtual environment and install Azure CLI
 RUN python3 -m venv /opt/azcli \
@@ -61,6 +68,7 @@ RUN yum install -y --allowerasing \
 COPY --from=builder /usr/local/bin/terraform /usr/local/bin/terraform
 COPY --from=builder /usr/local/bin/tflint /usr/local/bin/tflint
 COPY --from=builder /usr/local/bin/lazygit /usr/local/bin/lazygit
+COPY --from=builder /usr/local/bin/terraform-docs /usr/local/bin/terraform-docs
 COPY --from=builder /opt/azcli /opt/azcli
 
 # Set the environment variable for Azure CLI
