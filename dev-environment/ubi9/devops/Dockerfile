@@ -1,4 +1,4 @@
-# Stage 1: Build Terraform, Go, Lazygit, and Azure CLI
+# Stage 1: Build Terraform, Go, Lazygit, Azure CLI and terraform-docs
 FROM golang:1.22 AS builder
 
 # Install dependencies for building
