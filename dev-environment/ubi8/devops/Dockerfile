@@ -34,22 +34,16 @@ RUN curl -fsSL https://github.com/terraform-linters/tflint/releases/download/${T
     && mv tflint /usr/local/bin/tflint \
     && rm tflint.zip
 
-
 # Install terraform-docs
 RUN curl -fsSL https://github.com/terraform-docs/terraform-docs/releases/download/${TERRAFORM_DOCS_VERSION}/terraform-docs-${TERRAFORM_DOCS_VERSION}-linux-amd64.tar.gz -o terraform-docs.tar.gz \
     && tar -xzf terraform-docs.tar.gz \
     && mv terraform-docs /usr/local/bin/terraform-docs \
     && rm terraform-docs.tar.gz
 
-# Create virtual environment and install Azure CLI
-RUN python3 -m venv /opt/azcli \
-    && /opt/azcli/bin/pip install --upgrade pip \
-    && /opt/azcli/bin/pip install --no-cache-dir azure-cli
-
 # Stage 2: Create final minimal image
 FROM redhat/ubi8:8.10-1088
 
-# Install only necessary runtime dependencies
+# Install runtime dependencies + build tools (temporarily)
 RUN yum install -y \
     git \
     curl \
@@ -59,13 +53,22 @@ RUN yum install -y \
     python3 \
     python3-pip \
     unzip \
+    gcc \
+    python3-devel \
     && yum clean all
+
+# Install Azure CLI in the final image
+RUN python3 -m venv /opt/azcli \
+    && /opt/azcli/bin/pip install --upgrade pip \
+    && /opt/azcli/bin/pip install --no-cache-dir azure-cli
+
+# Remove build tools to keep the image minimal
+RUN yum remove -y gcc python3-devel && yum clean all
 
 # Copy binaries from builder stage
 COPY --from=builder /usr/local/bin/terraform /usr/local/bin/terraform
 COPY --from=builder /usr/local/bin/tflint /usr/local/bin/tflint
 COPY --from=builder /usr/local/bin/terraform-docs /usr/local/bin/terraform-docs
-COPY --from=builder /opt/azcli /opt/azcli
 
 # Set the environment variable for Azure CLI
 ENV PATH="/opt/azcli/bin:$PATH"
