@@ -88,8 +88,17 @@ RUN curl -fsSL https://dl.google.com/go/go${GO_VERSION}.linux-amd64.tar.gz | tar
 ENV GOPATH=/go
 ENV PATH=$GOPATH/bin:/usr/local/go/bin:$PATH
 
-# Set the environment variable for Azure CLI and pre-commit
-ENV PATH="/opt/azcli/bin:/opt/precommit/bin:$PATH"
+# Copy the entrypoint script
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+
+# Make the entrypoint script executable
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
+# Set environment variables for both Azure CLI and pre-commit
+ENV PATH="/opt/azcli/bin:/opt/pre-commit/bin:$PATH"
+
+# Use the custom entrypoint to print message and system info
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 
 # Set entrypoint to bash for an interactive shell
-ENTRYPOINT ["/bin/bash"]
+CMD ["/bin/bash"]
