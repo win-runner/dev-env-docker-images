@@ -1,4 +1,4 @@
-# Stage 1: Build Terraform, Go, Lazygit, Azure CLI and terraform-docs
+# Stage 1: Build Terraform, Go, Azure CLI, and terraform-docs
 FROM golang:1.22 AS builder
 
 # Install dependencies for building
@@ -20,7 +20,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Version variables
 ENV TERRAFORM_VERSION=1.9.6
 ENV TFLINT_VERSION=v0.53.0
-ENV LAZYGIT_VERSION=0.44.1
 ENV TERRAFORM_DOCS_VERSION=v0.19.0
 
 # Install Terraform
@@ -35,8 +34,6 @@ RUN curl -fsSL https://github.com/terraform-linters/tflint/releases/download/${T
     && mv tflint /usr/local/bin/tflint \
     && rm tflint.zip
 
-# Install Lazygit
-RUN GOBIN=/usr/local/bin go install github.com/jesseduffield/lazygit@v${LAZYGIT_VERSION}
 
 # Install terraform-docs
 RUN curl -fsSL https://github.com/terraform-docs/terraform-docs/releases/download/${TERRAFORM_DOCS_VERSION}/terraform-docs-${TERRAFORM_DOCS_VERSION}-linux-amd64.tar.gz -o terraform-docs.tar.gz \
@@ -67,7 +64,6 @@ RUN yum install -y \
 # Copy binaries from builder stage
 COPY --from=builder /usr/local/bin/terraform /usr/local/bin/terraform
 COPY --from=builder /usr/local/bin/tflint /usr/local/bin/tflint
-COPY --from=builder /usr/local/bin/lazygit /usr/local/bin/lazygit
 COPY --from=builder /usr/local/bin/terraform-docs /usr/local/bin/terraform-docs
 COPY --from=builder /opt/azcli /opt/azcli
 
