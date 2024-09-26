@@ -47,7 +47,7 @@ RUN python3 -m venv /opt/azcli \
     && /opt/azcli/bin/pip install --no-cache-dir azure-cli
 
 # Stage 2: Create final minimal image
-FROM redhat/ubi8:8.10-1054
+FROM redhat/ubi8:8.10-1088
 
 # Install only necessary runtime dependencies
 RUN yum install -y \
