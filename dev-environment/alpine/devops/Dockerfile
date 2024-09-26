@@ -79,7 +79,7 @@ COPY --from=builder /opt/azcli /opt/azcli
 COPY --from=builder /opt/precommit /opt/precommit
 
 # Install Go
-ARG GO_VERSION=1.21.5
+ARG GO_VERSION=1.23.1
 RUN curl -fsSL https://dl.google.com/go/go${GO_VERSION}.linux-amd64.tar.gz | tar -C /usr/local -xz \
     && ln -s /usr/local/go/bin/go /usr/local/bin/go \
     && ln -s /usr/local/go/bin/gofmt /usr/local/bin/gofmt
