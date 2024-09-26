@@ -1,4 +1,4 @@
-# Stage 1: Build Terraform, Go, Lazygit, Azure CLI and terraform-docs
+# Stage 1: Build Terraform, Go, Lazygit, tflint and terraform-docs
 FROM golang:1.22 AS builder
 
 # Install dependencies for building
@@ -44,11 +44,6 @@ RUN curl -fsSL https://github.com/terraform-docs/terraform-docs/releases/downloa
     && mv terraform-docs /usr/local/bin/terraform-docs \
     && rm terraform-docs.tar.gz
 
-# Create virtual environment and install Azure CLI
-RUN python3 -m venv /opt/azcli \
-    && /opt/azcli/bin/pip install --upgrade pip \
-    && /opt/azcli/bin/pip install --no-cache-dir azure-cli
-
 # Stage 2: Create final minimal image
 FROM ubuntu:24.10
 
@@ -61,19 +56,38 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     vim \
     python3 \
     python3-pip \
+    python3.12-venv \
     unzip \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
+
+# Create virtual environment and install Azure CLI
+RUN python3 -m venv /opt/azcli \
+    && /opt/azcli/bin/pip install --upgrade pip \
+    && /opt/azcli/bin/pip install --no-cache-dir azure-cli
+
+# Install pre-commit in its own virtual environment at /opt/pre-commit
+RUN python3 -m venv /opt/pre-commit \
+    && /opt/pre-commit/bin/pip install --upgrade pip \
+    && /opt/pre-commit/bin/pip install --no-cache-dir pre-commit
 
 # Copy binaries from builder stage
 COPY --from=builder /usr/local/bin/terraform /usr/local/bin/terraform
 COPY --from=builder /usr/local/bin/tflint /usr/local/bin/tflint
 COPY --from=builder /usr/local/bin/lazygit /usr/local/bin/lazygit
 COPY --from=builder /usr/local/bin/terraform-docs /usr/local/bin/terraform-docs
-COPY --from=builder /opt/azcli /opt/azcli
 
-# Set the environment variable for Azure CLI
-ENV PATH="/opt/azcli/bin:$PATH"
+# Copy the entrypoint script
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+
+# Make the entrypoint script executable
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
+# Set environment variables for both Azure CLI and pre-commit
+ENV PATH="/opt/azcli/bin:/opt/pre-commit/bin:$PATH"
+
+# Use the custom entrypoint to print message and system info
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 
 # Set entrypoint to bash for an interactive shell
-ENTRYPOINT ["/bin/bash"]
+CMD ["/bin/bash"]
