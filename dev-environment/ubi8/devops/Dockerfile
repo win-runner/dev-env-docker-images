@@ -57,10 +57,15 @@ RUN yum install -y \
     python3-devel \
     && yum clean all
 
-# Install Azure CLI in the final image
+# Install Azure CLI in its own virtual environment at /opt/azcli
 RUN python3 -m venv /opt/azcli \
     && /opt/azcli/bin/pip install --upgrade pip \
     && /opt/azcli/bin/pip install --no-cache-dir azure-cli
+
+# Install pre-commit in its own virtual environment at /opt/pre-commit
+RUN python3 -m venv /opt/pre-commit \
+    && /opt/pre-commit/bin/pip install --upgrade pip \
+    && /opt/pre-commit/bin/pip install --no-cache-dir pre-commit
 
 # Remove build tools to keep the image minimal
 RUN yum remove -y gcc python3-devel && yum clean all
@@ -70,8 +75,8 @@ COPY --from=builder /usr/local/bin/terraform /usr/local/bin/terraform
 COPY --from=builder /usr/local/bin/tflint /usr/local/bin/tflint
 COPY --from=builder /usr/local/bin/terraform-docs /usr/local/bin/terraform-docs
 
-# Set the environment variable for Azure CLI
-ENV PATH="/opt/azcli/bin:$PATH"
+# Set environment variables for both Azure CLI and pre-commit
+ENV PATH="/opt/azcli/bin:/opt/pre-commit/bin:$PATH"
 
 # Set entrypoint to bash for an interactive shell
 ENTRYPOINT ["/bin/bash"]
