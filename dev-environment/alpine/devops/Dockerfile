@@ -51,8 +51,8 @@ RUN python3 -m venv /opt/azcli \
     && deactivate
 
 # Create virtual environment for pre-commit
-RUN python3 -m venv /opt/precommit \
-    && . /opt/precommit/bin/activate \
+RUN python3 -m venv /opt/pre-commit \
+    && . /opt/pre-commit/bin/activate \
     && pip install --no-cache-dir pre-commit \
     && deactivate
 
@@ -76,7 +76,7 @@ COPY --from=builder /usr/local/bin/tflint /usr/local/bin/tflint
 COPY --from=builder /usr/local/bin/lazygit /usr/local/bin/lazygit
 COPY --from=builder /usr/local/bin/terraform-docs /usr/local/bin/terraform-docs
 COPY --from=builder /opt/azcli /opt/azcli
-COPY --from=builder /opt/precommit /opt/precommit
+COPY --from=builder /opt/pre-commit /opt/pre-commit
 
 # Install Go
 ARG GO_VERSION=1.23.1
