@@ -44,11 +44,6 @@ RUN curl -fsSL https://github.com/terraform-docs/terraform-docs/releases/downloa
     && mv terraform-docs /usr/local/bin/terraform-docs \
     && rm terraform-docs.tar.gz
 
-# Create virtual environment and install Azure CLI
-RUN python3 -m venv /opt/azcli \
-    && /opt/azcli/bin/pip install --upgrade pip \
-    && /opt/azcli/bin/pip install --no-cache-dir azure-cli
-
 # Stage 2: Create final minimal image
 FROM ubi9:9.4-1181.1724035907
 
@@ -64,15 +59,24 @@ RUN yum install -y --allowerasing \
     unzip \
     && yum clean all
 
+# Install Azure CLI in its own virtual environment at /opt/azcli
+RUN python3 -m venv /opt/azcli \
+    && /opt/azcli/bin/pip install --upgrade pip \
+    && /opt/azcli/bin/pip install --no-cache-dir azure-cli
+
+# Install pre-commit in its own virtual environment at /opt/pre-commit
+RUN python3 -m venv /opt/pre-commit \
+    && /opt/pre-commit/bin/pip install --upgrade pip \
+    && /opt/pre-commit/bin/pip install --no-cache-dir pre-commit
+
 # Copy binaries from builder stage
 COPY --from=builder /usr/local/bin/terraform /usr/local/bin/terraform
 COPY --from=builder /usr/local/bin/tflint /usr/local/bin/tflint
 COPY --from=builder /usr/local/bin/lazygit /usr/local/bin/lazygit
 COPY --from=builder /usr/local/bin/terraform-docs /usr/local/bin/terraform-docs
-COPY --from=builder /opt/azcli /opt/azcli
 
 # Set the environment variable for Azure CLI
-ENV PATH="/opt/azcli/bin:$PATH"
+ENV PATH="/opt/azcli/bin:/opt/pre-commit/bin:$PATH"
 
 # Set entrypoint to bash for an interactive shell
 ENTRYPOINT ["/bin/bash"]
