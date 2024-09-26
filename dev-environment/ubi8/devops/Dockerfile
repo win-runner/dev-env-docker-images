@@ -1,4 +1,4 @@
-# Stage 1: Build Terraform, Go, Azure CLI, and terraform-docs
+# Stage 1: Build Terraform, Go, tflint and terraform-docs
 FROM golang:1.22 AS builder
 
 # Install dependencies for building
