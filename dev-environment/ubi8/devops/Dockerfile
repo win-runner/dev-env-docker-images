@@ -55,6 +55,8 @@ RUN yum install -y \
     unzip \
     gcc \
     python3-devel \
+    procps \
+    hostname \
     && yum clean all
 
 # Install Azure CLI in its own virtual environment at /opt/azcli
@@ -75,8 +77,17 @@ COPY --from=builder /usr/local/bin/terraform /usr/local/bin/terraform
 COPY --from=builder /usr/local/bin/tflint /usr/local/bin/tflint
 COPY --from=builder /usr/local/bin/terraform-docs /usr/local/bin/terraform-docs
 
+# Copy the entrypoint script
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+
+# Make the entrypoint script executable
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
 # Set environment variables for both Azure CLI and pre-commit
 ENV PATH="/opt/azcli/bin:/opt/pre-commit/bin:$PATH"
 
-# Set entrypoint to bash for an interactive shell
-ENTRYPOINT ["/bin/bash"]
+# Use the custom entrypoint to print message and system info
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+
+# Default to bash shell for interactivity
+CMD ["/bin/bash"]
