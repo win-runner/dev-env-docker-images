@@ -18,7 +18,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # Version variables
-ENV TERRAFORM_VERSION=1.9.6
+ENV TERRAFORM_VERSION=1.9.7
 ENV TFLINT_VERSION=v0.53.0
 ENV LAZYGIT_VERSION=0.44.1
 ENV TERRAFORM_DOCS_VERSION=v0.19.0
