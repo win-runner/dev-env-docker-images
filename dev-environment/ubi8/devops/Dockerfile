@@ -18,7 +18,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # Version variables
-ENV TERRAFORM_VERSION=1.10.4
+ENV TERRAFORM_VERSION=1.10.5
 ENV TFLINT_VERSION=v0.55.0
 ENV TERRAFORM_DOCS_VERSION=v0.19.0
 
