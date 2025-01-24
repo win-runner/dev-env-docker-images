@@ -45,7 +45,7 @@ RUN curl -fsSL https://github.com/terraform-docs/terraform-docs/releases/downloa
     && rm terraform-docs.tar.gz
 
 # Stage 2: Create final minimal image
-FROM ubi9:9.4-1181.1724035907
+FROM ubi9:9.5-1736404036
 
 # Install only necessary runtime dependencies
 RUN yum install -y --allowerasing \
