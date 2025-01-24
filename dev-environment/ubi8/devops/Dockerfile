@@ -41,7 +41,7 @@ RUN curl -fsSL https://github.com/terraform-docs/terraform-docs/releases/downloa
     && rm terraform-docs.tar.gz
 
 # Stage 2: Create final minimal image
-FROM redhat/ubi8:8.10-1088
+FROM redhat/ubi8:8.10-1161
 
 # Install runtime dependencies + build tools (temporarily)
 RUN yum install -y \
