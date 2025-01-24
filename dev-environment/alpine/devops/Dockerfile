@@ -1,5 +1,5 @@
 # Stage 1: Build Terraform, Go, Lazygit, Azure CLI, pre-commit, and terraform-docs
-FROM alpine:3.20.3 AS builder
+FROM alpine:3.21.2 AS builder
 
 # Install dependencies for building
 RUN apk --no-cache add \
@@ -57,7 +57,7 @@ RUN python3 -m venv /opt/pre-commit \
     && deactivate
 
 # Stage 2: Create final minimal image
-FROM alpine:3.20.3
+FROM alpine:3.21.2
 
 # Install only necessary runtime dependencies
 RUN apk --no-cache add \
