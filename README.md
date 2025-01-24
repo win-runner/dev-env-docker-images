@@ -43,6 +43,7 @@ VSCode will automatically detect the .devcontainer configuration and prompt you 
 ## Images
 
 ### Ubuntu
+
 Ubuntu-based Development Environment with Terraform, Go, Lazygit, TFLint and Terraform-Docs. \
 This container is based on Ubuntu 24.10 and is designed to provide a comprehensive development environment for Terraform, Go, and other related tools. It includes:
 
@@ -56,6 +57,7 @@ This container is based on Ubuntu 24.10 and is designed to provide a comprehensi
 This image is suited for developers working on Terraform configurations with a focus on automation, Git integration, and cloud infrastructure management.
 
 ### UBI 8
+
 Red Hat UBI8-based Development Environment with Terraform, TFLint, and Azure CLI. \
 This container uses Red Hat Universal Base Image 8 (UBI8) and focuses on providing a robust environment for enterprise-level infrastructure development:
 
@@ -68,6 +70,7 @@ This container uses Red Hat Universal Base Image 8 (UBI8) and focuses on providi
 This image is best suited for developers working in Red Hat environments or those familiar with Red Hat's package management tools.
 
 ### UBI 9
+
 Red Hat UBI9-based Development Environment with Terraform, Go, Lazygit, and TFLint. \
 This image is based on Red Hat UBI9 and provides an environment geared towards infrastructure development with Terraform and Go:
 
@@ -81,6 +84,7 @@ This image is based on Red Hat UBI9 and provides an environment geared towards i
 This image is intended for users working in Red Hat ecosystems who require a fully configured Terraform development environment along with cloud management tools.
 
 ### Alpine
+
 Alpine-based Development Environment with Terraform, Go, Lazygit, TFLint and Azure CLI. \
 This container uses Alpine Linux (v3.20.3) as a lightweight base and includes several tools for IaC development:
 
