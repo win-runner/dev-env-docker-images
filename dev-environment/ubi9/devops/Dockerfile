@@ -20,7 +20,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Version variables
 ENV TERRAFORM_VERSION=1.11.3
 ENV TFLINT_VERSION=v0.55.0
-ENV LAZYGIT_VERSION=0.45.2
+ENV LAZYGIT_VERSION=0.48.0
 ENV TERRAFORM_DOCS_VERSION=v0.19.0
 
 # Install Terraform
